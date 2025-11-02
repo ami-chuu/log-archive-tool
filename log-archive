@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# ===== Colors =====
+GRAY="\e[1;30m"
+RED="\e[1;31m"
+GREEN="\e[1;32m"
+BLUE="\e[1;34m"
+WHITE="\e[1;37m"
+RESET="\e[0m"
+
+# ===== Date and Time =====
+currentDate=$(date +"%Y%m%d_%H%M%S")
+
+# ===== Archiving =====
+if [ $# -eq 1 ] && [ -d "$1" ]; then
+	echo -e "${WHITE}Start archiving...${GRAY}"
+    sudo mkdir -p /var/log/log-archives
+
+	archivePath="/var/log/log-archives/logs-archive_${currentDate}.tar.gz"
+
+	if sudo -k tar -czvf "$archivePath" "$1"/*; then
+	    echo -e "${GREEN}The archive has been saved successfully at${RESET} ${BLUE}$archivePath${RESET}"
+    else
+        echo -e "${RED}Archiving failed. Check permissions or disk space.${RESET}"
+    fi
+else
+	echo -e "${GRAY}Usage:${RESET} ${WHITE}log-archive${RESET} ${BLUE}<log-directory>${RESET}"
+fi
+exit 0
